@@ -52,6 +52,12 @@ class ChatContent extends Component {
   messageChanged(e){
     this.setState({message: e.target.value});
   }
+
+  handleChatEnt(e){
+    if (e.keyCode === 13 && e.target.value) {
+      this.send();
+    }
+  }
   
   send(){
     socket.emit('chatMsg', {
@@ -60,13 +66,14 @@ class ChatContent extends Component {
     });
     this.setState({message: ''});
   }
+
   render(){
     return (
       <div style={styles.form}>
         이름:<br />
         <input value={this.state.name} onChange={e => this.nameChanged(e)} /><br />
         메시지:<br />
-        <input value={this.state.message} onChange={e => this.messageChanged(e)} /><br />
+        <input value={this.state.message} onChange={e => this.messageChanged(e)} onKeyDown={e => this.handleChatEnt(e)} /><br />
         <button onClick={e => this.send()}>전송</button>
       </div>
     )
