@@ -16,10 +16,8 @@ class App extends Component {
   }
 
   componentDidMount(){
-    //this.chatLoad(this.state.chatChannel);
-
     const roomId = this.state.chatChannel;
-    console.log(roomId, '<< [ roomId ]');
+
     socket.emit('join', {id: roomId});
 
     socket.on('chatMsg', (obj) => {
@@ -60,7 +58,11 @@ class App extends Component {
     return(
       <div>
         <h1 style={styles.h1}>실시간 채팅</h1>
-        <ChatContent chatChannel={this.state.chatChannel} chatListUpdate={this.chatListUpdate} channelUpdate={this.channelUpdate} />
+        <ChatContent 
+          chatChannel={this.state.chatChannel}
+          chatListUpdate={this.chatListUpdate}
+          channelUpdate={this.channelUpdate} 
+        />
         <div>{messages}</div>
       </div>
     );
@@ -70,7 +72,11 @@ class App extends Component {
 class ChatContent extends Component {
   constructor(props){
     super(props);
-    this.state = { name: '', message: '', chatChannel: this.props.chatChannel };
+    this.state = { 
+      name: '', 
+      message: '', 
+      chatChannel: this.props.chatChannel 
+    };
   }
 
   componentDidUpdate(prevProps, prevState){
@@ -95,8 +101,6 @@ class ChatContent extends Component {
   }
 
   handleChannel(e){
-    console.log(this.state.chatChannel, '<< [ this.v.chatChannel ]');
-    //this.props.chatLoad(e.target.value);
     const param = {
       id: e.target.value,
       name: 'SYSTEM',

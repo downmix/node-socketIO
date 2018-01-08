@@ -20,17 +20,16 @@ app.get('/', (req, res) => {
 io.on('connection', socket => {
   let roomId;
   console.log(`접속 : ${socket.client.id}`);
-  //console.log(socket, '<< [ socket ]');
+
   const param = {
     id : socket.client.id,
   };
 
-  socket.on('join', (data, ack) => {
+  socket.on('join', data => {
     roomId = data.id;
     socket.leaveAll();
     socket.join(roomId);
     socket.broadcast.to(roomId).emit('connectUser', param);
-    //ack(param);
   })
 
   socket.on('disconnect', () => {
@@ -39,13 +38,12 @@ io.on('connection', socket => {
 
   socket.on('chatMsg', msg => {
     console.dir(msg);
-    //io.emit('chatMsg', msg);
     
+    //글로벌채널의 경우 전체전송
     if(roomId === '0'){
-      console.log(roomId, '<< [ roomId ]');
-      //io.emit('chatMsg', msg);
       io.sockets.emit('chatMsg', msg);
+    }else{
+      socket.broadcast.to(roomId).emit('chatMsg', msg);
     }
-    socket.broadcast.to(roomId).emit('chatMsg', msg);
   })
 })
